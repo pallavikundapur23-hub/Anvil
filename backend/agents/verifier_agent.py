@@ -10,31 +10,31 @@ client = Groq(
     api_key=os.getenv("GROQ_API_KEY")
 )
 
-def planner_agent(issue_text):
+def verifier_agent(patch_text):
 
-    print("\n===== PLANNER AGENT RUNNING =====\n")
+    print("\n===== VERIFIER AGENT RUNNING =====\n")
 
     project_files = read_project_files()
 
     prompt = f"""
-You are an autonomous backend debugging planner AI.
+You are a backend verification AI.
 
 IMPORTANT:
-- ONLY use the actual repository files provided.
+- ONLY use the repository files provided.
 - DO NOT invent frameworks or files.
-- The project is a simple Python backend.
-
-GitHub Issue:
-{issue_text}
+- Validate patch against actual Python backend code.
 
 ACTUAL REPOSITORY FILES:
 {project_files}
 
+PATCH RESULT:
+{patch_text}
+
 TASKS:
-1. Identify likely root cause
-2. Identify affected files
-3. Explain debugging plan
-4. Suggest investigation order
+1. Verify fix correctness
+2. Identify possible risks
+3. Suggest validation improvements
+4. Identify remaining edge cases
 
 Return concise technical analysis.
 """
@@ -52,7 +52,7 @@ Return concise technical analysis.
 
     result = response.choices[0].message.content
 
-    print("\n===== PLANNER RESULT =====\n")
+    print("\n===== VERIFICATION RESULT =====\n")
     print(result)
 
     return result

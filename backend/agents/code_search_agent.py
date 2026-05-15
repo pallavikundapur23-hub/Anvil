@@ -10,19 +10,19 @@ client = Groq(
     api_key=os.getenv("GROQ_API_KEY")
 )
 
-def planner_agent(issue_text):
+def code_search_agent(issue_text):
 
-    print("\n===== PLANNER AGENT RUNNING =====\n")
+    print("\n===== CODE SEARCH AGENT RUNNING =====\n")
 
     project_files = read_project_files()
 
     prompt = f"""
-You are an autonomous backend debugging planner AI.
+You are a backend code search AI.
 
 IMPORTANT:
-- ONLY use the actual repository files provided.
-- DO NOT invent frameworks or files.
-- The project is a simple Python backend.
+- ONLY use the repository files provided.
+- DO NOT invent new files.
+- Use only actual Python backend files.
 
 GitHub Issue:
 {issue_text}
@@ -30,11 +30,12 @@ GitHub Issue:
 ACTUAL REPOSITORY FILES:
 {project_files}
 
-TASKS:
-1. Identify likely root cause
-2. Identify affected files
-3. Explain debugging plan
-4. Suggest investigation order
+TASK:
+Identify:
+1. Most relevant buggy file
+2. Related helper files
+3. Validation-related code
+4. Authentication-related code
 
 Return concise technical analysis.
 """
@@ -52,7 +53,7 @@ Return concise technical analysis.
 
     result = response.choices[0].message.content
 
-    print("\n===== PLANNER RESULT =====\n")
+    print("\n===== CODE SEARCH RESULT =====\n")
     print(result)
 
     return result

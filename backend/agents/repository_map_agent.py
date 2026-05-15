@@ -10,31 +10,33 @@ client = Groq(
     api_key=os.getenv("GROQ_API_KEY")
 )
 
-def planner_agent(issue_text):
+def repository_map_agent(issue_text):
 
-    print("\n===== PLANNER AGENT RUNNING =====\n")
+    print("\n===== REPOSITORY MAP AGENT RUNNING =====\n")
 
-    project_files = read_project_files()
+    repo_context = read_project_files()
 
     prompt = f"""
-You are an autonomous backend debugging planner AI.
+You are a repository analysis AI.
 
-IMPORTANT:
-- ONLY use the actual repository files provided.
-- DO NOT invent frameworks or files.
-- The project is a simple Python backend.
+You must ONLY use the repository files provided.
 
 GitHub Issue:
 {issue_text}
 
-ACTUAL REPOSITORY FILES:
-{project_files}
+REPOSITORY CONTEXT:
+{repo_context}
 
 TASKS:
-1. Identify likely root cause
-2. Identify affected files
-3. Explain debugging plan
-4. Suggest investigation order
+1. List actual repository files
+2. Identify relevant files for this issue
+3. Explain why those files are relevant
+4. Ignore unrelated files
+
+IMPORTANT:
+- DO NOT invent frameworks
+- DO NOT invent controllers/services
+- ONLY use discovered files
 
 Return concise technical analysis.
 """
@@ -52,7 +54,7 @@ Return concise technical analysis.
 
     result = response.choices[0].message.content
 
-    print("\n===== PLANNER RESULT =====\n")
+    print("\n===== REPOSITORY MAP RESULT =====\n")
     print(result)
 
     return result
