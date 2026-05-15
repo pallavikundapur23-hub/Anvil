@@ -1,6 +1,7 @@
 def login_user(username, password):
 
-    if password == "":
-        raise Exception("Server Crash")
+    # ❌ Bug: wrong logic
+    if password:
+        return {"error": "Password required"}
 
     return "Login Success"
